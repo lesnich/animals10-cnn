@@ -1,81 +1,71 @@
-# 🧠 Animals-10: CNN with Hyperparameter Optimization
+# 🧠 Animals-10: Transfer Learning & Fine-Tuning
 
-This project uses the **Animals-10** dataset to train a Convolutional Neural Network (CNN) for multi-class image classification, with a focus on **manual and automated hyperparameter optimization** using **Optuna**. The full workflow is implemented in **Google Colab** with PyTorch.
+This project uses the **Animals-10** dataset to perform multi-class image classification based on **Transfer Learning** and **Fine-Tuning** techniques. The full pipeline is implemented in **Google Colab** using **PyTorch**.
 
 ---
 
 ## 📁 Dataset
-- Contains **10 animal classes**, originally named in **Italian**.
-- Class folder names are **translated to English**.
-- Data is **automatically split** into:
-  - Training set
-  - Validation set
-  - Test set
+- Dataset contains **10 animal classes**, originally named in **Italian**.
+- Folder names were **translated to English**.
+- Dataset was **automatically split** into:
+  - Training
+  - Validation
+  - Testing
 
 ---
 
-## 🧠 Model Architecture
+## 🔄 Transfer Learning
+- Base model: **ResNet50** pre-trained on ImageNet
+- Adapted final `fc` layer to match 10 classes
+- Initial training: **frozen convolutional base**, only classifier head trained
+- Fine-tuning phase:
+  - Gradual unfreezing of convolutional layers
+  - Learning rate scheduler: `ReduceLROnPlateau`
+  - Data augmentation: rotation, flip, brightness adjustments
+
+---
+
+## ⚙️ Training Configuration
 - Input image size: **128×128**
-- **2–3 Convolutional layers** with ReLU activation
-- **MaxPooling** + **Dropout**
-- **Fully connected (Dense)** layers:
-  - FC(128 or 256 units) → FC(10)
-- Final activation: handled via `CrossEntropyLoss`
-- Optimizer: **Adam**
-- Hyperparameters such as learning rate, dropout, FC size are optimized
-
----
-
-## 🔁 Hyperparameter Optimization
-- **Manual search** using `itertools.product`
-- **Automated optimization** with **Optuna**
-- Optimized:
-  - `learning_rate`
-  - `dropout`
-  - `fc_units`
-  - `num_conv_layers`
-- Evaluation based on **validation accuracy**
-
----
-
-## ⚙️ Training Details
-- Epochs: 10 (per trial)
+- Epochs: 10–20
 - Batch size: 32
-- GPU acceleration (if available)
-- Best model is saved as: `best_model.pth`
+- Optimizer: **Adam**
+- Loss function: `CrossEntropyLoss`
+- Model checkpoints saved:
+  - Initial: `animal_cnn_model.pth`
+  - Best after fine-tuning: `model_best.pth`
 
 ---
 
-## 📊 Evaluation Metrics
+## 📊 Evaluation
 - Accuracy
 - F1-score (macro, weighted)
-- Precision & Recall
-- Confusion Matrix
-- Visualized:
-  - Loss and Accuracy curves
-  - Hyperparameter effects (via `seaborn.pairplot`)
+- Confusion matrix
+- Visualizations:
+  - Training vs validation loss & accuracy
+  - Misclassified examples
 
 ---
 
 ## ✅ Final Results
-- **Test Accuracy**: ~70.1%
-- **Weighted F1-score**: ~69.6%
-- Top classes: `spider`, `chicken`, `butterfly`
-- Weakest: `cat`, `squirrel`, `cow`
+- **Test Accuracy**: ~95.1%
+- **F1-score**: ~95.0%
+- Best performance: `spider`, `chicken`, `butterfly`
+- Weak classes: `squirrel`, `cow`, `cat`
 
 ---
 
 ## 🚀 How to Run
 1. Open the notebook in **Google Colab**
-2. Follow the sections:
-   - 📦 Dataset loading
-   - 🧠 Model building
-   - 🔧 Hyperparameter tuning
-   - 📊 Evaluation
-   - 💾 Model saving
-3. (Optional) Upload results or `.pth` to GitHub or Drive
+2. Execute step-by-step:
+   - Load and split dataset
+   - Load pretrained model
+   - Replace final classifier
+   - Train, fine-tune and evaluate
+   - Save results and model
+3. Upload `.pth` files to Drive or GitHub (optional)
 
 ---
 
-Made with ❤️ in Google Colab  
+Made with 💻 in Google Colab  
 Author: **Sofiia Kolesnichenko**
